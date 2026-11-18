@@ -26,6 +26,23 @@ export const copy = {
   share: 'Twice a day, whoever is awake stops for ten minutes, together. Here that is {first} and {second}.',
   soundOnLabel: 'Sound on',
   soundOffLabel: 'Sound off',
+  countOne: 'At least {x} person',
+  countOther: 'At least {x} people',
+  countRestOne: 'has said they will sit this session.',
+  countRestOther: 'have said they will sit this session.',
+  countUnavailable: 'The count is unavailable.',
+  countMeIn: 'Count me in',
+  counted: 'You’re counted',
+  takeOut: 'Take me out',
+  alsoNext: 'Count me in for the next one too',
+  remindMe: 'Remind me',
+  remindersOn: 'Reminders on',
+  stopReminders: 'Stop reminders',
+  remindersBlocked: 'Reminders blocked',
+  blockedLine: 'Notifications are blocked for this site. The browser’s settings are the only place to change that.',
+  remindersStopped: 'Reminders stopped.',
+  remindUnsupported: 'This browser can’t show reminders. The bell still rings on this page while it is open.',
+  cornerNext: 'Next · {time}',
 } as const
 
 export type CopyKey = keyof typeof copy

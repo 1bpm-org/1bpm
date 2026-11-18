@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>The session — 1BPM</title>
+    <meta name="description" content="The ten minutes after 06:00 UTC or 18:00 UTC. The same two moments, not one shared vision." />
+    <meta name="theme-color" content="#07080a" />
+    <meta name="color-scheme" content="dark light" />
+    <script>
+      try {
+        var h = new Date().getHours(), t = h >= 6 && h < 18 ? 'day' : 'night'
+        document.documentElement.dataset.theme = t
+        document.querySelector('meta[name="theme-color"]').content = t === 'day' ? '#f4f1ea' : '#07080a'
+      } catch (e) {}
+    </script>
+    <link rel="canonical" href="https://1bpm.org/session/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="The session — 1BPM" />
+    <meta property="og:description" content="The ten minutes after 06:00 UTC or 18:00 UTC. The same two moments, not one shared vision." />
+    <meta property="og:url" content="https://1bpm.org/session/" />
+    <meta property="og:image" content="https://1bpm.org/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="icon" href="/favicon-64.png" sizes="64x64" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+  </head>
+  <body data-mode="page" class="page">
+    <header class="bar">
+      <a class="mark" href="/" aria-label="1BPM, home"><img class="emblem" alt="" width="26" height="26" />1BPM</a>
+      <a id="corner" class="quiet corner" href="/"></a>
+    </header>
+
+    <main class="reading-page" id="top">
+      <h1>The session</h1>
+      <div class="your-times" id="your-times">
+        <p><span class="label">06:00 UTC</span> <span class="t" data-bell="06"></span></p>
+        <p><span class="label">18:00 UTC</span> <span class="t" data-bell="18"></span></p>
+        <p class="meta">Your time · <span data-zone></span> · 06:00 UTC · 18:00 UTC</p>
+        <noscript><p class="meta">06:00 UTC · 18:00 UTC</p></noscript>
+      </div>
+      <ul class="plain">
+        <li>The sit is the ten minutes after 06:00:00&nbsp;UTC or 18:00:00&nbsp;UTC. Twenty only if chosen beforehand.</li>
+        <li>Together means the same two moments, not one shared vision and not one synchronized breath.</li>
+        <li>Phone face down if that is easy. If it is not, begin anyway.</li>
+        <li>No mantra required. If someone already prays or counts in a tradition, they may use it, and they still stop when the time ends. The app does not rank faiths or replace them.</li>
+        <li>Walking is in bounds: short path, slower than errands, attention on the feet, eyes open. Not exercise.</li>
+        <li>A group needs no leader. If the room wants words, only: the local time, the duration, and that you stop when it ends.</li>
+        <li>Nothing is owed back to the site.</li>
+      </ul>
+    </main>
+
+    <nav class="reading" aria-label="Reading">
+      <a href="/practice/">Practice</a>
+      <a href="/session/">Session</a>
+      <a href="/room/">A room</a>
+      <a href="/difficulties/">When it is hard</a>
+    </nav>
+    <footer class="foot">Non-profit. No account. No tracking required to sit. <a href="/onboarding/">See the introduction</a></footer>
+
+    <script type="module" src="/src/page.ts"></script>
+  </body>
+</html>

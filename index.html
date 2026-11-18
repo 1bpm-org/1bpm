@@ -8,6 +8,11 @@
     <meta name="theme-color" content="#07080a" />
     <meta name="color-scheme" content="dark light" />
     <script>
+      // First visit: the introduction comes before the world (crawlers get the page itself).
+      try {
+        if (!localStorage.getItem('1bpm.onboarded') && !/bot|crawl|spider|slurp|preview|facebookexternalhit|embed/i.test(navigator.userAgent))
+          location.replace('/onboarding/')
+      } catch (e) {}
       // Day (06:00–17:59 on the visitor's clock) or night, set before first paint.
       try {
         var h = new Date().getHours(), t = h >= 6 && h < 18 ? 'day' : 'night'
@@ -32,6 +37,7 @@
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="icon" href="/favicon-64.png" sizes="64x64" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="preload" href="/population.png" as="fetch" crossorigin />
   </head>
   <body data-mode="approach">
@@ -70,6 +76,15 @@
           </p>
           <p class="line">Twice a day. The same two moments. Whoever is awake.</p>
 
+          <div class="commit" id="commit" hidden>
+            <p class="count" id="count" hidden><span id="count-lead"></span> <span id="count-rest" class="count-rest"></span></p>
+            <div class="commit-row">
+              <button type="button" id="commit-btn" class="quiet commit-btn" aria-pressed="false">Count me in</button>
+              <button type="button" id="take-out" class="quiet" hidden>Take me out</button>
+              <button type="button" id="also-next" class="quiet also-next" role="switch" aria-checked="false" hidden>Count me in for the next one too</button>
+            </div>
+          </div>
+
           <div class="actions" id="actions">
             <div class="primary">
               <button type="button" id="wait" class="act">Wait for the bell</button>
@@ -82,7 +97,8 @@
                 <button type="button" class="quiet dur" data-min="10" aria-pressed="true">10 min</button>
                 <button type="button" class="quiet dur" data-min="20" aria-pressed="false">20 min</button>
               </span>
-              <button type="button" id="here" class="quiet" aria-pressed="false">I am here</button>
+              <button type="button" id="remind" class="quiet" aria-pressed="false" hidden>Remind me</button>
+              <button type="button" id="stop-remind" class="quiet" hidden>Stop reminders</button>
               <a class="quiet" href="#letter">The letter</a>
             </div>
           </div>
@@ -132,6 +148,12 @@
           ordinary.
         </p>
         <p>Anyone who feels this is worth doing is already part of it.</p>
+        <nav class="reading" aria-label="Reading">
+          <a href="/practice/">Practice</a>
+          <a href="/session/">Session</a>
+          <a href="/room/">A room</a>
+          <a href="/difficulties/">When it is hard</a>
+        </nav>
         <p class="source">
           The points are where people live: GHS-POP 2025, European Commission Joint Research Centre, summed to one
           degree. The two faint lines are where each bell falls in the early afternoon.
@@ -139,7 +161,7 @@
       </article>
     </main>
 
-    <footer class="foot">Non-profit. No account. No tracking required to sit.</footer>
+    <footer class="foot">Non-profit. No account. No tracking required to sit. <a href="/onboarding/">See the introduction</a></footer>
 
     <script type="module" src="/src/main.ts"></script>
   </body>

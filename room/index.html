@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>If you open a room — 1BPM</title>
+    <meta name="description" content="A studio, a school, a shift, a kitchen. Say the local time. Ten minutes. Stop at the bell." />
+    <meta name="theme-color" content="#07080a" />
+    <meta name="color-scheme" content="dark light" />
+    <script>
+      try {
+        var h = new Date().getHours(), t = h >= 6 && h < 18 ? 'day' : 'night'
+        document.documentElement.dataset.theme = t
+        document.querySelector('meta[name="theme-color"]').content = t === 'day' ? '#f4f1ea' : '#07080a'
+      } catch (e) {}
+    </script>
+    <link rel="canonical" href="https://1bpm.org/room/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="If you open a room — 1BPM" />
+    <meta property="og:description" content="A studio, a school, a shift, a kitchen. Say the local time. Ten minutes. Stop at the bell." />
+    <meta property="og:url" content="https://1bpm.org/room/" />
+    <meta property="og:image" content="https://1bpm.org/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="icon" href="/favicon-64.png" sizes="64x64" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+  </head>
+  <body data-mode="page" class="page">
+    <header class="bar">
+      <a class="mark" href="/" aria-label="1BPM, home"><img class="emblem" alt="" width="26" height="26" />1BPM</a>
+      <a id="corner" class="quiet corner" href="/"></a>
+    </header>
+
+    <main class="reading-page" id="top">
+      <h1>If you open a room</h1>
+      <ul class="plain">
+        <li>Say the local time out loud, and say the other one.</li>
+        <li>Ten minutes. A visible clock. Stop even if it felt short.</li>
+        <li>Chairs are enough. A way to leave without apologizing.</li>
+        <li>No incense required. No dimming required. Enough light to be safe.</li>
+        <li>
+          Read at most these three lines, or none:
+          <blockquote class="lines">
+            <p>We sit for ten minutes.</p>
+            <p>Attention on the breath, or the feet. When it wanders, come back.</p>
+            <p>We stop at the bell, even if the room is quiet in a way we like.</p>
+          </blockquote>
+        </li>
+        <li>Do not ask for shares afterward. If someone is shaken, a human stays. This site is not a crisis service.</li>
+        <li>A studio, a school, and a kitchen are the same practice.</li>
+        <li>No fee is required to sit with 1BPM. A studio’s own class fee is not a payment to 1BPM.</li>
+      </ul>
+    </main>
+
+    <nav class="reading" aria-label="Reading">
+      <a href="/practice/">Practice</a>
+      <a href="/session/">Session</a>
+      <a href="/room/">A room</a>
+      <a href="/difficulties/">When it is hard</a>
+    </nav>
+    <footer class="foot">Non-profit. No account. No tracking required to sit. <a href="/onboarding/">See the introduction</a></footer>
+
+    <script type="module" src="/src/page.ts"></script>
+  </body>
+</html>

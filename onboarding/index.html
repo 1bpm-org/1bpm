@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>1BPM — The times</title>
+    <meta name="description" content="Twice a day. The same two moments. Whoever is awake. 06:00 UTC and 18:00 UTC." />
+    <meta name="theme-color" content="#07080a" />
+    <meta name="color-scheme" content="dark light" />
+    <script>
+      try {
+        var h = new Date().getHours(), t = h >= 6 && h < 18 ? 'day' : 'night'
+        document.documentElement.dataset.theme = t
+        document.querySelector('meta[name="theme-color"]').content = t === 'day' ? '#f4f1ea' : '#07080a'
+      } catch (e) {}
+    </script>
+    <link rel="canonical" href="https://1bpm.org/onboarding/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="1BPM — The times" />
+    <meta property="og:description" content="Twice a day. The same two moments. Whoever is awake. 06:00 UTC and 18:00 UTC." />
+    <meta property="og:url" content="https://1bpm.org/onboarding/" />
+    <meta property="og:image" content="https://1bpm.org/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="icon" href="/favicon-64.png" sizes="64x64" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+  </head>
+  <body data-mode="page" class="page intro-page">
+    <header class="bar">
+      <a class="mark" href="/" aria-label="1BPM, home"><img class="emblem" alt="" width="26" height="26" />1BPM</a>
+      <a id="corner" class="quiet corner" href="/"></a>
+    </header>
+
+    <main class="intro" id="top">
+      <div class="steps" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+      <p class="label step-of" id="step-of" aria-live="polite"></p>
+
+      <section class="step" data-step="1" aria-labelledby="h1">
+        <h1 id="h1" tabindex="-1">There have never been this many of us, and rarely this much distance.</h1>
+        <p>1BPM is a ten-minute pause at two exact times. No account. No belief required.</p>
+      </section>
+
+      <section class="step" data-step="2" aria-labelledby="h2" hidden>
+        <h1 id="h2" tabindex="-1">06:00 UTC and 18:00 UTC.</h1>
+        <div class="intro-times">
+          <p><span class="label" id="ob-next-label"></span> <span class="t" id="ob-next"></span></p>
+          <p><span class="label" id="ob-other-label"></span> <span class="t" id="ob-other"></span></p>
+          <p class="meta" id="ob-zone"></p>
+        </div>
+        <p>Asia is awake for one. The Americas for the other. Almost no one is locked out of both.</p>
+      </section>
+
+      <section class="step" data-step="3" aria-labelledby="h3" hidden>
+        <h1 id="h3" tabindex="-1">Pick 10 or 20 minutes before you start.</h1>
+        <p>One anchor: the breath, or the feet. When attention leaves, come back. Stopping on time is the practice.</p>
+        <p><a href="/practice/">Read the guidelines</a></p>
+      </section>
+
+      <section class="step" data-step="4" aria-labelledby="h4" hidden>
+        <h1 id="h4" tabindex="-1">Being counted, and being told.</h1>
+        <p>You can say you will sit the next session. The site will show “at least X people,” because anyone without this page can still sit and will not be counted.</p>
+        <div class="switches">
+          <button type="button" class="switch" role="switch" aria-checked="false" id="ob-remind"><span class="knob" aria-hidden="true"></span>Remind me</button>
+          <button type="button" class="switch" role="switch" aria-checked="false" id="ob-count"><span class="knob" aria-hidden="true"></span>Count me in for the next session</button>
+        </div>
+        <p class="notice" id="ob-notice" role="status" aria-live="polite"></p>
+      </section>
+
+      <div class="intro-actions">
+        <button type="button" class="act" id="ob-next-btn">Next</button>
+        <button type="button" class="act" id="ob-skip">Skip</button>
+      </div>
+    </main>
+
+    <footer class="foot">Non-profit. No account. No tracking required to sit. <a href="/onboarding/">See the introduction</a></footer>
+
+    <script type="module" src="/src/onboarding.ts"></script>
+  </body>
+</html>

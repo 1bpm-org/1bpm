@@ -1,0 +1,84 @@
+# Deploy the API (api/) to Cloudflare as api.1bpm.org: a Worker plus a D1 database.
+# Needs two repository secrets: CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID.
+# Without them this workflow does nothing, and the site works without the count and closed-tab reminders.
+name: API
+
+on:
+  push:
+    branches: [main]
+    paths: ['api/**', '.github/workflows/api.yml']
+  workflow_dispatch:
+
+concurrency:
+  group: api
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    defaults:
+      run:
+        working-directory: api
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: check
+        run: |
+          if [ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID not set; skipping the API deploy."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - if: steps.check.outputs.ready == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: api/package-lock.json
+
+      - if: steps.check.outputs.ready == 'true'
+        run: npm ci
+
+      - name: Find or create the database
+        if: steps.check.outputs.ready == 'true'
+        run: |
+          find_id() {
+            npx wrangler d1 list --json | node -e '
+              let s = ""; process.stdin.on("data", (d) => (s += d)).on("end", () => {
+                const list = JSON.parse(s.slice(s.indexOf("[")));
+                console.log((list.find((d) => d.name === "1bpm") || {}).uuid || "");
+              })'
+          }
+          id=$(find_id)
+          if [ -z "$id" ]; then npx wrangler d1 create 1bpm; id=$(find_id); fi
+          test -n "$id"
+          sed -i "s/00000000-0000-0000-0000-000000000000/$id/" wrangler.toml
+
+      - name: Apply migrations
+        if: steps.check.outputs.ready == 'true'
+        run: npx wrangler d1 migrations apply 1bpm --remote
+
+      - name: Deploy
+        if: steps.check.outputs.ready == 'true'
+        run: |
+          # The worker binds to itself (to fan out large sends). On the very first deploy it does not
+          # exist yet, so if the deploy is refused, deploy once without that binding, then with it.
+          if ! npx wrangler deploy; then
+            sed '/^# This worker, bound to itself/,$d' wrangler.toml > wrangler.first.toml
+            npx wrangler deploy -c wrangler.first.toml
+            npx wrangler deploy
+          fi
+
+      - name: Check it answers
+        if: steps.check.outputs.ready == 'true'
+        run: |
+          for i in 1 2 3 4 5 6; do
+            if curl -fsS https://api.1bpm.org/v1/push/key; then exit 0; fi
+            sleep 20
+          done
+          echo "::warning::api.1bpm.org did not answer yet; the custom domain certificate can take a few minutes."

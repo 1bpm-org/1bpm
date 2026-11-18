@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>When it is hard — 1BPM</title>
+    <meta name="description" content="Thinking, sleepiness, feeling worse, missing the bell. Short answers. This is not treatment." />
+    <meta name="theme-color" content="#07080a" />
+    <meta name="color-scheme" content="dark light" />
+    <script>
+      try {
+        var h = new Date().getHours(), t = h >= 6 && h < 18 ? 'day' : 'night'
+        document.documentElement.dataset.theme = t
+        document.querySelector('meta[name="theme-color"]').content = t === 'day' ? '#f4f1ea' : '#07080a'
+      } catch (e) {}
+    </script>
+    <link rel="canonical" href="https://1bpm.org/difficulties/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="When it is hard — 1BPM" />
+    <meta property="og:description" content="Thinking, sleepiness, feeling worse, missing the bell. Short answers. This is not treatment." />
+    <meta property="og:url" content="https://1bpm.org/difficulties/" />
+    <meta property="og:image" content="https://1bpm.org/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="icon" href="/favicon-64.png" sizes="64x64" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+  </head>
+  <body data-mode="page" class="page">
+    <header class="bar">
+      <a class="mark" href="/" aria-label="1BPM, home"><img class="emblem" alt="" width="26" height="26" />1BPM</a>
+      <a id="corner" class="quiet corner" href="/"></a>
+    </header>
+
+    <main class="reading-page" id="top">
+      <h1>When it is hard</h1>
+      <ul class="guide">
+        <li>
+          <h2>I can’t stop thinking.</h2>
+          <p>You are not supposed to. Come back. Counting the breath from 1 to 10, then restarting, is a legal aid. Losing count means start at 1. Do not keep score.</p>
+        </li>
+        <li>
+          <h2>I got sleepy.</h2>
+          <p>Open the eyes. Sit up. Feel the feet. If the body needs sleep, nap, and use the other bell. Do not win against exhaustion.</p>
+        </li>
+        <li>
+          <h2>I felt worse.</h2>
+          <p>Shorten to five minutes. Open the eyes. Feel the chair and name three things you can see.</p>
+          <p>If practice regularly leaves you worse, stop and speak to a clinician. Do not push through. This is not treatment.</p>
+          <p>If you are in danger now, call your local emergency number. In many countries, <a href="https://findahelpline.com">findahelpline.com</a> lists a free, confidential line near you.</p>
+        </li>
+        <li>
+          <h2>I need a special morning.</h2>
+          <p>You do not. A parked car or a break room is enough.</p>
+        </li>
+        <li>
+          <h2>I missed the bell.</h2>
+          <p>Sit later, or wait for the other one. There is no streak.</p>
+        </li>
+        <li>
+          <h2>I want it deeper.</h2>
+          <p>Longer sits are yours to try later. Depth is not a sensation. Hunting it usually means leaving the anchor.</p>
+        </li>
+        <li>
+          <h2>I am in pain.</h2>
+          <p>Move. Sharp pain, chest pain, or trouble breathing: stop. That is medical.</p>
+        </li>
+        <li>
+          <h2>I don’t know if I’m doing it right.</h2>
+          <p>A chosen duration, one anchor, and a return when you notice you left. That is the whole test.</p>
+        </li>
+      </ul>
+      <p class="close">The best instruction is the shortest one you will still remember at minute eight: <em>Back.</em></p>
+    </main>
+
+    <nav class="reading" aria-label="Reading">
+      <a href="/practice/">Practice</a>
+      <a href="/session/">Session</a>
+      <a href="/room/">A room</a>
+      <a href="/difficulties/">When it is hard</a>
+    </nav>
+    <footer class="foot">Non-profit. No account. No tracking required to sit. <a href="/onboarding/">See the introduction</a></footer>
+
+    <script type="module" src="/src/page.ts"></script>
+  </body>
+</html>

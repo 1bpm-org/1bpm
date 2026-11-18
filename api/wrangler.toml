@@ -1,0 +1,24 @@
+# The 1BPM API. Deployed by .github/workflows/api.yml, which fills in database_id.
+name = "1bpm-api"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+workers_dev = false
+routes = [{ pattern = "api.1bpm.org", custom_domain = true }]
+
+[vars]
+ORIGINS = "https://1bpm.org,https://www.1bpm.org"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "1bpm"
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "migrations"
+
+# Reminders: T-10 minutes and the bell, for both bells. The handler ignores the other four instants.
+[triggers]
+crons = ["0,50 5,6,17,18 * * *"]
+
+# This worker, bound to itself, to fan large reminder sends out across invocations.
+[[services]]
+binding = "SELF"
+service = "1bpm-api"
