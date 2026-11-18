@@ -1,0 +1,66 @@
+# Build the iOS app, run its tests on a simulator, and take screenshots (downloadable from the run).
+name: iOS
+
+on:
+  push:
+    branches: [main]
+    paths: ['ios/**', '.github/workflows/ios.yml']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    defaults:
+      run:
+        working-directory: ios
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate the Xcode project
+        run: |
+          brew install xcodegen
+          xcodegen generate
+
+      - name: Pick an iPhone simulator
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          devs = [d for rt, ds in json.load(sys.stdin)["devices"].items() if "iOS" in rt for d in ds]
+          pick = [d for d in devs if d["name"].startswith("iPhone 16 Pro")] or [d for d in devs if d["name"].startswith("iPhone")]
+          print(pick[0]["udid"])')
+          echo "UDID=$UDID" >> "$GITHUB_ENV"
+          xcrun simctl list devices | grep "$UDID"
+
+      - name: Build and test
+        run: |
+          set -o pipefail
+          xcodebuild test -project OneBPM.xcodeproj -scheme OneBPM -destination "id=$UDID" \
+            -derivedDataPath build CODE_SIGNING_ALLOWED=NO 2>&1 | tee build.log | grep -E "error:|warning: .*(OneBPM|Shaders)|Test Case|Executed|TEST (SUCCEEDED|FAILED)|BUILD (SUCCEEDED|FAILED)" | head -200
+
+      - name: Screenshots
+        run: |
+          mkdir -p shots
+          APP=build/Build/Products/Debug-iphonesimulator/OneBPM.app
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl install "$UDID" "$APP"
+          shot() { # name, timezone, wait, launch args...
+            local name=$1 zone=$2 wait=$3; shift 3
+            xcrun simctl terminate "$UDID" org.onebpm.app 2>/dev/null || true
+            SIMCTL_CHILD_TZ="$zone" xcrun simctl launch "$UDID" org.onebpm.app "$@"
+            sleep "$wait"
+            xcrun simctl io "$UDID" screenshot "shots/$name.png"
+          }
+          shot onboarding Europe/London 4 -onboarded NO
+          shot home-a Europe/London 10 -onboarded YES
+          shot home-b Asia/Tokyo 10 -onboarded YES
+          shot practice Asia/Tokyo 5 -onboarded YES -page practice
+          shot session Europe/London 5 -onboarded YES -page session
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ios
+          path: |
+            ios/shots
+            ios/build.log
