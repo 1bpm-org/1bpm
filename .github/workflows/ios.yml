@@ -9,7 +9,12 @@ on:
 
 jobs:
   build:
-    runs-on: macos-15-intel # the arm64 pool has been at capacity
+    # Several macOS images: the hosted macOS pools have been slow to hand out machines.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, macos-14, macos-15-intel]
+    runs-on: ${{ matrix.os }}
     defaults:
       run:
         working-directory: ios
@@ -60,7 +65,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ios
+          name: ios-${{ matrix.os }}
           path: |
             ios/shots
             ios/build.log
