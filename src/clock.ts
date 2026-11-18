@@ -106,6 +106,17 @@ export function sessionTimes(now: Date, timeZone: string, locale?: string): Sess
   }
 }
 
+/**
+ * Which half of the visitor's own day it is: 06:00–17:59 local is day, the rest is night.
+ * The same 06/18 split as the bells, read on the visitor's clock (their zone, so their place).
+ */
+export function localHalf(now: Date, timeZone: string): 'day' | 'night' {
+  const hour = Number(
+    fmt('en-GB', { hour: '2-digit', hourCycle: 'h23', timeZone }).formatToParts(now).find((p) => p.type === 'hour')?.value,
+  )
+  return hour >= 6 && hour < 18 ? 'day' : 'night'
+}
+
 /** Runtime IANA zone, never a fixed offset. */
 export function runtimeTimeZone(): string {
   try {

@@ -6,7 +6,18 @@
     <title>1BPM — Twice a day</title>
     <meta name="description" content="Twice a day. The same two moments. Whoever is awake. 06:00 UTC and 18:00 UTC." />
     <meta name="theme-color" content="#07080a" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="color-scheme" content="dark light" />
+    <script>
+      // Day (06:00–17:59 on the visitor's clock) or night, set before first paint.
+      try {
+        var h = new Date().getHours(), t = h >= 6 && h < 18 ? 'day' : 'night'
+        document.documentElement.dataset.theme = t
+        document.querySelector('meta[name="theme-color"]').content = t === 'day' ? '#f4f1ea' : '#07080a'
+        var l = document.createElement('link')
+        l.rel = 'preload'; l.as = 'image'; l.href = '/brand/planet-' + t + '.webp'
+        document.head.appendChild(l)
+      } catch (e) {}
+    </script>
     <meta property="og:type" content="website" />
     <meta property="og:title" content="1BPM — Twice a day" />
     <meta property="og:description" content="Twice a day. The same two moments. Whoever is awake. 06:00 UTC and 18:00 UTC." />
@@ -18,22 +29,26 @@
     <meta property="og:image:alt" content="1BPM. 06:00 UTC, 18:00 UTC." />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preload" href="/population.png" as="fetch" crossorigin />
   </head>
-  <body>
+  <body data-mode="approach">
     <canvas id="field" aria-hidden="true"></canvas>
     <div id="veil" aria-hidden="true"></div>
 
     <header class="bar">
-      <a class="mark" href="#top" aria-label="1BPM">1BPM</a>
+      <a class="mark" href="#top" aria-label="1BPM"><img class="emblem" alt="" width="26" height="26" />1BPM</a>
       <button id="sound" class="quiet" type="button" aria-pressed="true">Sound on</button>
     </header>
 
     <p id="bell-note" class="bell-note" role="status" aria-live="polite"></p>
 
     <main id="top">
-      <section id="hero" class="hero" data-mode="approach" aria-labelledby="next-heading">
-        <p class="approach-mark" aria-hidden="true">1BPM</p>
+      <section id="hero" class="hero" aria-labelledby="next-heading">
+        <div class="approach-mark" aria-hidden="true">
+          <img class="emblem" alt="" width="180" height="180" />
+          <span>1BPM</span>
+        </div>
 
         <div class="soon" aria-hidden="true">
           <span class="hairline"><span class="hairline-fill"></span></span>

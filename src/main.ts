@@ -1,9 +1,9 @@
 import './style.css'
 import { Bell } from './audio'
-import { MINUTE, runtimeTimeZone, sessionTimes, type Phase, type SessionTimes } from './clock'
+import { localHalf, MINUTE, runtimeTimeZone, sessionTimes, type Phase, type SessionTimes } from './clock'
 import { t } from './copy'
 import { GRID_H, GRID_W, pickHere, sampleField } from './field'
-import { World } from './world'
+import { World, type Theme } from './world'
 
 type Mode = 'approach' | 'orient' | 'wait' | 'sit' | 'after'
 
@@ -207,8 +207,24 @@ function render(): void {
   }
 }
 
+// ---------- day / night ----------
+
+let theme: Theme | null = null
+
+/** Day from 06:00 to 18:00 on the visitor's own clock, night otherwise. */
+function applyTheme(now: Date): void {
+  const next = localHalf(now, tz)
+  if (next === theme) return
+  theme = next
+  document.documentElement.dataset.theme = next
+  document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')!.content = next === 'day' ? '#f4f1ea' : '#07080a'
+  document.querySelectorAll<HTMLImageElement>('img.emblem').forEach((img) => (img.src = `/brand/planet-${next}.webp`))
+  world?.setTheme(next)
+}
+
 function tick(): void {
   const now = Date.now()
+  applyTheme(new Date(now))
   current = sessionTimes(new Date(now), tz)
   const s = current
   const lastBell = s.lastBell.getTime()
@@ -306,6 +322,7 @@ async function initWorld(): Promise<void> {
       homeLonDeg: homeLon,
       homeLatDeg: Math.max(-22, Math.min(28, (latMin + latMax) / 2)),
       hereIndex: pickHere(field, homeLon, latMin, latMax),
+      theme: theme ?? localHalf(new Date(), tz),
     })
     layout()
     world.setPhase(current.phase, true)
@@ -433,6 +450,7 @@ window.addEventListener(
       const vh = window.innerHeight
       const x = Math.min(1, Math.max(0, (window.scrollY - 0.12 * vh) / (0.85 * vh)))
       const f = 1 - x * x * (3 - 2 * x)
+      el.canvas.style.transition = 'opacity 0.2s linear'
       el.canvas.style.opacity = f.toFixed(3)
       world?.setVisibleFraction(f)
     })

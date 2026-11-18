@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { phaseAt, sessionTimes } from './clock'
+import { localHalf, phaseAt, sessionTimes } from './clock'
 
 const L = 'en-GB' // 24-hour labels make the assertions unambiguous
 
@@ -124,5 +124,23 @@ describe('DST is taken from the zone database, never a fixed offset', () => {
     expect(s.nextDay).toBe('today')
     expect(s.otherDay).toBe('today')
     expect(s.zoneName).toMatch(/PST|GMT-8/)
+  })
+})
+
+describe('day/night follows the visitor\'s local clock', () => {
+  const half = (iso: string, tz: string) => localHalf(new Date(iso), tz)
+  it('switches at 06:00 and 18:00 local', () => {
+    expect(half('2026-11-18T05:59:59Z', 'Europe/London')).toBe('night')
+    expect(half('2026-11-18T06:00:00Z', 'Europe/London')).toBe('day')
+    expect(half('2026-11-18T17:59:59Z', 'Europe/London')).toBe('day')
+    expect(half('2026-11-18T18:00:00Z', 'Europe/London')).toBe('night')
+  })
+  it('the same instant is day in one place and night in another', () => {
+    const now = '2026-11-18T12:00:00Z'
+    expect(half(now, 'Europe/London')).toBe('day') // 12:00
+    expect(half(now, 'Asia/Kolkata')).toBe('day') // 17:30
+    expect(half(now, 'Pacific/Auckland')).toBe('night') // 01:00
+    expect(half(now, 'America/Los_Angeles')).toBe('night') // 04:00
+    expect(half(now, 'America/Sao_Paulo')).toBe('day') // 09:00
   })
 })

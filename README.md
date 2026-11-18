@@ -60,6 +60,23 @@ npm run og       # renders scripts/og.html to public/og.png using Playwright
 
 ## Logo
 
-`brand/` holds the logo set; `brand/preview.png` shows it at size. The mark is one day drawn as a
-24-hour dial with 00:00 at the top, opened at 06:00 and 18:00 with a point resting in each opening.
-`npm run brand` rebuilds the SVGs from `scripts/make_brand.py` (needs `pip install fonttools brotli`).
+`brand/` holds the logo set. The planet logo (`planet-*`, `logo-planet-*`) is the main one: the
+Earth drawn as dots from the same population grid the site uses, over a faint dotted landmass,
+inside one day drawn as a 24-hour dial. The dial (00:00 at the top) is opened at 06:00 and 18:00,
+with an amber point in each opening. The simple ring (`mark-*`, `favicon.svg`) is for sizes too small
+for the planet to read, such as the browser-tab icon.
+
+```bash
+pip install fonttools brotli numpy pillow
+npm run brand            # SVGs: simple mark, wordmark, planet
+node scripts/render-brand.mjs   # PNGs, plus the site's logo images in public/brand/
+```
+
+Land outlines: Natural Earth 1:50m (public domain), baked to `scripts/land-mask.png` by `scripts/bake_land.py`.
+
+## Day and night
+
+From 06:00 to 18:00 on the visitor's own clock the page is ink on paper; from 18:00 to 06:00 it
+is paper on ink. The time zone comes from the browser, so no location permission is asked and
+nothing is sent. The theme is set before first paint and switches live if the page is open across
+06:00 or 18:00.

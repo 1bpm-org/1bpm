@@ -31,10 +31,13 @@ const LON_18 = (MERIDIAN_LOCAL_HOUR - 18) * 15 * DEG // 75°W
 // Shader colours are written to the framebuffer as-is: keep them in sRGB, no linear conversion.
 ColorManagement.enabled = false
 
-const PAPER = new Color('#f4f1ea')
-const ACCENT = new Color('#c8a571') // low-saturation amber
-const CLEAR = new Color('#07080a')
-const GLOBE = new Color('#0b0c0f')
+export type Theme = 'day' | 'night'
+
+// Night: paper-white dust on near-black. Day: ink dust on paper. Amber deepens by day.
+const PALETTES: Record<Theme, { dot: string; accent: string; clear: string; globe: string }> = {
+  night: { dot: '#f4f1ea', accent: '#c8a571', clear: '#07080a', globe: '#0b0c0f' },
+  day: { dot: '#07080a', accent: '#9a7642', clear: '#f4f1ea', globe: '#e9e4d8' },
+}
 
 export interface WorldLayout {
   width: number
@@ -54,6 +57,7 @@ export interface WorldOptions {
   homeLonDeg: number
   homeLatDeg: number
   hereIndex: number
+  theme: Theme
 }
 
 /** Exponential approach: frame-rate independent, no overshoot, no bounce. */
@@ -107,7 +111,6 @@ export class World {
   constructor(private opts: WorldOptions) {
     const { canvas, field } = opts
     this.renderer = new WebGLRenderer({ canvas, antialias: false, alpha: false, stencil: false, depth: true })
-    this.renderer.setClearColor(CLEAR, 1)
     this.pixelRatio = Math.min(window.devicePixelRatio || 1, opts.maxPixelRatio)
     this.renderer.setPixelRatio(this.pixelRatio)
 
@@ -123,7 +126,7 @@ export class World {
       uSweepLon: { value: 0 },
       uSweepAmt: { value: 0 },
       uPulse: { value: 1 },
-      uAccent: { value: ACCENT },
+      uAccent: { value: new Color() },
     }
 
     this.geometry = new BufferGeometry()
@@ -141,7 +144,8 @@ export class World {
         uRestDistance: { value: 4 },
         uHereId: { value: opts.hereIndex },
         uHereGlow: { value: 0 },
-        uPaper: { value: PAPER },
+        uDay: { value: 0 },
+        uPaper: { value: new Color() },
       },
       transparent: true,
       premultipliedAlpha: true,
@@ -152,7 +156,7 @@ export class World {
     this.globeMaterial = new ShaderMaterial({
       vertexShader: GLOBE_VERTEX,
       fragmentShader: GLOBE_FRAGMENT,
-      uniforms: { ...this.shared, uBase: { value: GLOBE } },
+      uniforms: { ...this.shared, uBase: { value: new Color() } },
     })
 
     const globe = new Mesh(this.globeGeometry, this.globeMaterial)
@@ -160,6 +164,7 @@ export class World {
     const points = new Points(this.geometry, this.fieldMaterial)
     points.renderOrder = 1
     this.scene.add(globe, points)
+    this.setTheme(opts.theme)
 
     // Drag nudges the view. Touch keeps vertical scroll (touch-action: pan-y in CSS).
     this.onDown = (e) => {
@@ -192,6 +197,16 @@ export class World {
       if (!this.hidden) this.wake()
     }
     document.addEventListener('visibilitychange', this.onVisibility)
+  }
+
+  setTheme(theme: Theme): void {
+    const p = PALETTES[theme]
+    this.renderer.setClearColor(p.clear, 1)
+    ;(this.fieldMaterial.uniforms.uPaper.value as Color).set(p.dot)
+    ;(this.shared.uAccent.value as Color).set(p.accent)
+    ;(this.globeMaterial.uniforms.uBase.value as Color).set(p.globe)
+    this.fieldMaterial.uniforms.uDay.value = theme === 'day' ? 1 : 0
+    this.wake()
   }
 
   /** Approach: start far away; the camera settles on its own. */

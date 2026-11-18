@@ -45,6 +45,7 @@ export const FIELD_VERTEX = /* glsl */ `
   uniform float uPulse;         // reduced-motion bell: an opacity pulse only
   uniform int   uHereId;
   uniform float uHereGlow;
+  uniform float uDay;           // 1 in day mode: ink on paper crowds darker at the limb, so soften it
 
   attribute vec2 aData;         // x: seed, y: density (0..1, log-scaled)
 
@@ -81,10 +82,12 @@ export const FIELD_VERTEX = /* glsl */ `
 
     float alpha = mix(0.07, 0.36, pow(density, 1.2));
     alpha *= 1.0 - 0.15 * liveAmount(uPhase);          // the field dims ~15% at the bell
-    alpha *= smoothstep(0.02, 0.32, facing);           // soft limb
+    float limb = smoothstep(0.02, mix(0.32, 0.6, uDay), facing);
+    alpha *= limb;                                     // soft limb
+    alpha *= mix(1.0, 0.8, uDay);
     alpha *= 1.0 + shimmer;
     alpha *= uPulse;
-    alpha += (glow * 0.22 + sweep * 0.35) * smoothstep(0.02, 0.32, facing);
+    alpha += (glow * 0.22 + sweep * 0.35) * limb * mix(1.0, 0.55, uDay);
     alpha += isHere * 0.8;
 
     vAlpha = clamp(alpha, 0.0, 1.0);
