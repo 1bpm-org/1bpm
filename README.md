@@ -38,16 +38,19 @@ python3 scripts/bake_population.py GHS_POP_E2025_GLOBE_R2023A_4326_30ss_V1_0.tif
 
 The grid totals 8.19 billion people. Cells under 1 person/km² are dropped; they hold 0.13% of the population.
 
-## Deploy (GitLab Pages → 1bpm.org)
+## Deploy (GitHub Pages → 1bpm.org)
 
-`.gitlab-ci.yml` runs the tests on every push. On the default branch it also builds the site and publishes it to Pages.
+`.github/workflows/pages.yml` runs the tests, builds the site and publishes it on every push to `main`.
 
-1. Push to `gitlab.com/1bpm-foundation/1bpm`. The `pages` job publishes the site.
-2. Go to **Deploy → Pages**. Set Pages access to *Everyone*; the project can stay private.
-3. Under **Domains**, add `1bpm.org`, and `www.1bpm.org` if you want it. Copy the DNS records GitLab shows into your DNS provider:
-   an `A` record (or ALIAS) for the apex domain pointing at GitLab Pages, and a `TXT` record for
-   `_gitlab-pages-verification-code.1bpm.org`.
-4. Turn on automatic HTTPS (Let's Encrypt) for the domain.
+1. In the repository, open **Settings → Pages** and set **Source** to *GitHub Actions*.
+2. Under **Custom domain**, enter `1bpm.org` and save.
+3. At your DNS provider, point the apex domain at GitHub Pages using the `A` records listed in GitHub's
+   custom-domain documentation, and add a `CNAME` record for `www` pointing to `<account>.github.io`.
+4. When the domain check passes, turn on **Enforce HTTPS**.
+
+On a free GitHub plan, Pages only publishes from public repositories.
+
+`.gitlab-ci.yml` does the same for GitLab Pages, if the code moves there.
 
 ## Regenerate the share image
 
