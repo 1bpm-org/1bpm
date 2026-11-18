@@ -28,6 +28,11 @@ export class Bell {
         this.ctx = new Ctx({ latencyHint: 'interactive' })
       }
       if (this.ctx.state === 'suspended') void this.ctx.resume()
+      // iOS Safari only fully unlocks once something has played inside the gesture.
+      const silent = this.ctx.createBufferSource()
+      silent.buffer = this.ctx.createBuffer(1, 1, this.ctx.sampleRate)
+      silent.connect(this.ctx.destination)
+      silent.start()
     } catch {
       this.ctx = null
     }
@@ -40,7 +45,13 @@ export class Bell {
   /** Strike now, or at a wall-clock instant (sample-accurate on the audio clock). */
   strike(atWallMs?: number, gain = 1): void {
     const ctx = this.ctx
-    if (!ctx || ctx.state !== 'running') return
+    if (!ctx) return
+    if (ctx.state === 'suspended') {
+      // Unlocked in this same gesture but still waking up: strike as soon as it runs.
+      void ctx.resume().then(() => ctx.state === 'running' && this.strike(atWallMs, gain))
+      return
+    }
+    if (ctx.state !== 'running') return
     const lead = atWallMs ? Math.max(0, (atWallMs - Date.now()) / 1000) : 0
     const t = ctx.currentTime + lead + 0.01
     if (atWallMs) this.scheduledFor = atWallMs

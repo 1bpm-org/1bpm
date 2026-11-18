@@ -125,8 +125,10 @@ function setMode(next: Mode): void {
   render()
 }
 
-function startSit(lengthMs: number, startWall = Date.now()): void {
+/** `ring`: strike to open the sit. False when the shared bell has just rung for it. */
+function startSit(lengthMs: number, startWall = Date.now(), ring = true): void {
   sit = { startWall, startPerf: performance.now() - (Date.now() - startWall), lengthMs }
+  if (ring && soundOn) bell.strike()
   el.breath.setAttribute('aria-pressed', 'false')
   if (window.scrollY > 0) window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' })
   setMode('sit')
@@ -143,7 +145,7 @@ function finishSit(completed: boolean): void {
   if (!sit) return
   const elapsed = performance.now() - sit.startPerf
   sit = null
-  if (completed && soundOn && bell.armed) bell.strike(undefined, 0.55)
+  if (completed && soundOn) bell.strike(undefined, 0.55)
   setMode(completed || elapsed >= MINUTE ? 'after' : 'orient')
   ;(mode === 'after' ? el.share : el.begin).focus({ preventScroll: true })
 }
@@ -161,7 +163,7 @@ function onBell(at: number): void {
   const audible = soundOn && bell.armed
   if (audible && bell.scheduledFor !== at) bell.strike()
   if (!audible) note(t('soundOff'))
-  if (mode === 'wait') startSit(durationMin * MINUTE, at)
+  if (mode === 'wait') startSit(durationMin * MINUTE, at, false)
 }
 
 function note(text: string): void {
@@ -325,8 +327,10 @@ async function initWorld(): Promise<void> {
 function unlockAudio(): void {
   if (soundOn) bell.unlock()
 }
-window.addEventListener('pointerdown', unlockAudio, { passive: true })
-window.addEventListener('keydown', unlockAudio)
+// Capture phase, so the context exists before any button handler that wants to strike.
+// pointerdown alone is not a user activation for touch; pointerup, touchend and click are.
+for (const type of ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown'])
+  window.addEventListener(type, unlockAudio, { capture: true, passive: true })
 
 function renderSound(): void {
   el.sound.setAttribute('aria-pressed', String(soundOn))
