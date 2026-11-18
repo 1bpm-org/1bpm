@@ -1,0 +1,5 @@
+node_modules/
+dist/
+*.tif
+*.zip
+.DS_Store

@@ -1,0 +1,28 @@
+# Test on every push; publish to GitLab Pages (https://1bpm.org) from the default branch.
+image: node:22-alpine
+
+stages: [test, deploy]
+
+cache:
+  key:
+    files: [package-lock.json]
+  paths: [.npm/]
+
+before_script:
+  - npm ci --cache .npm --prefer-offline
+
+test:
+  stage: test
+  script:
+    - npm test
+
+pages:
+  stage: deploy
+  script:
+    - npm run build
+    # Vite writes to dist/; GitLab Pages serves the artifact folder named public/.
+    - rm -rf public && mv dist public
+  artifacts:
+    paths: [public]
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
