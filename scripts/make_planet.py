@@ -201,6 +201,8 @@ def main() -> None:
     for name, dark in (("planet-light-on-dark", True), ("planet-dark-on-light", False)):
         (OUT / f"{name}.svg").write_text(svg(512, 512, planet(256, 256, 512, dark, uid="a" if dark else "b")))
     (OUT / "planet-icon.svg").write_text(svg(512, 512, planet(256, 256, 456, True, uid="i"), bg=INK))
+    # Daylight icon, filled out to the edge: the browser-tab icon is drawn from this.
+    (OUT / "planet-icon-day.svg").write_text(svg(512, 512, planet(256, 256, 500, False, uid="j"), bg=PAPER))
 
     cap = 64.0
     d, word_w, lsb = wordmark("1BPM", cap, 0.22)

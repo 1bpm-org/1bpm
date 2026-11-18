@@ -63,13 +63,14 @@ npm run og       # renders scripts/og.html to public/og.png using Playwright
 `brand/` holds the logo set. The planet logo (`planet-*`, `logo-planet-*`) is the main one: the
 Earth drawn as dots from the same population grid the site uses, over a faint dotted landmass,
 inside one day drawn as a 24-hour dial. The dial (00:00 at the top) is opened at 06:00 and 18:00,
-with an amber point in each opening. The simple ring (`mark-*`, `favicon.svg`) is for sizes too small
-for the planet to read, such as the browser-tab icon.
+with an amber point in each opening. The browser-tab icon is the daylight planet on paper
+(`planet-icon-day.svg`). The simple ring (`mark-*`, `favicon.svg`) remains for one-colour uses.
 
 ```bash
 pip install fonttools brotli numpy pillow
 npm run brand            # SVGs: simple mark, wordmark, planet
 node scripts/render-brand.mjs   # PNGs, plus the site's logo images in public/brand/
+python3 scripts/make_site_icons.py   # tab icons (favicon.ico, favicon-32/64.png) and WebP site logos
 ```
 
 Land outlines: Natural Earth 1:50m (public domain), baked to `scripts/land-mask.png` by `scripts/bake_land.py`.

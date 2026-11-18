@@ -20,6 +20,8 @@ const jobs = [
   ['brand/planet-light-on-dark.svg', 'public/brand/planet-night.png', 512, 512, 360 / 512, true],
   ['brand/planet-dark-on-light.svg', 'public/brand/planet-day.png', 512, 512, 360 / 512, true],
   ['brand/planet-icon.svg', 'public/apple-touch-icon.png', 512, 512, 180 / 512, false],
+  // master for the browser-tab icons; scripts/make_favicons.py downsamples it
+  ['brand/planet-icon-day.svg', 'brand/planet-icon-day-1024.png', 512, 512, 2, false],
 ]
 
 const browser = await chromium.launch()
