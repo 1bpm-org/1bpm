@@ -57,3 +57,9 @@ On a free GitHub plan, Pages only publishes from public repositories.
 ```bash
 npm run og       # renders scripts/og.html to public/og.png using Playwright
 ```
+
+## Logo
+
+`brand/` holds the logo set; `brand/preview.png` shows it at size. The mark is one day drawn as a
+24-hour dial with 00:00 at the top, opened at 06:00 and 18:00 with a point resting in each opening.
+`npm run brand` rebuilds the SVGs from `scripts/make_brand.py` (needs `pip install fonttools brotli`).

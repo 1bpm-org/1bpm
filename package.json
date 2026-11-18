@@ -7,7 +7,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "bake:population": "python3 scripts/bake_population.py",
-    "og": "node scripts/make-og.mjs"
+    "og": "node scripts/make-og.mjs",
+    "brand": "python3 scripts/make_brand.py"
   },
   "dependencies": {
     "@fontsource-variable/inter-tight": "^5.3.0",
